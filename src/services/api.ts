@@ -1,9 +1,12 @@
-import { Board, Pin, Category } from '@/types/MoodBoardZ';
+import { Board, Pin, Category, Comment } from '@/types/MoodBoardZ';
 
+// API Base URL - ganti dengan URL backend Anda
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+// Helper untuk mendapatkan token
 const getToken = () => localStorage.getItem('auth_token');
 
+// Helper untuk headers
 const headers = () => ({
   'Content-Type': 'application/json',
   ...(getToken() && { Authorization: `Bearer ${getToken()}` }),
@@ -99,6 +102,33 @@ export const deletePin = async (id: string): Promise<void> => {
   if (!res.ok) throw new Error('Gagal hapus pin');
 };
 
+// ==================== COMMENTS ====================
+
+export const getComments = async (pinId: string): Promise<Comment[]> => {
+  const res = await fetch(`${API_URL}/comments/pin/${pinId}`, { headers: headers() });
+  if (!res.ok) throw new Error('Gagal mengambil comments');
+  return res.json();
+};
+
+export const createComment = async (pinId: string, text: string): Promise<Comment> => {
+  const res = await fetch(`${API_URL}/comments/pin/${pinId}`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify({ text }),
+  });
+  if (!res.ok) throw new Error('Gagal menambah comment');
+  return res.json();
+};
+
+export const deleteComment = async (commentId: string): Promise<void> => {
+  const res = await fetch(`${API_URL}/comments/${commentId}`, {
+    method: 'DELETE',
+    headers: headers(),
+  });
+  if (!res.ok) throw new Error('Gagal hapus comment');
+};
+
+// ==================== UPLOAD ====================
 
 export const uploadImage = async (file: File): Promise<string> => {
   const formData = new FormData();
@@ -114,6 +144,7 @@ export const uploadImage = async (file: File): Promise<string> => {
   return data.imageUrl;
 };
 
+// ==================== CATEGORIES (Static) ====================
 
 export const getCategories = async (): Promise<Category[]> => {
   return [
@@ -125,6 +156,7 @@ export const getCategories = async (): Promise<Category[]> => {
   ];
 };
 
+// ==================== AUTH ====================
 
 export const login = async (email: string, password: string) => {
   const res = await fetch(`${API_URL}/auth/login`, {
@@ -146,6 +178,7 @@ export const register = async (username: string, email: string, password: string
   return res.json();
 };
 
+// Export semua sebagai object untuk backward compatibility
 export const api = {
   getBoards,
   getBoard,
@@ -157,6 +190,9 @@ export const api = {
   createPin,
   updatePin,
   deletePin,
+  getComments,
+  createComment,
+  deleteComment,
   uploadImage,
   getCategories,
   login,

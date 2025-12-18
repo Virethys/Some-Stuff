@@ -28,6 +28,18 @@ export interface Category {
   color: string;
 }
 
+export interface Comment {
+  _id: string;
+  text: string;
+  pinId: string;
+  userId: {
+    _id: string;
+    username: string;
+    avatar?: string;
+  };
+  createdAt: string;
+}
+
 export type Mood = 
   | 'minimal' 
   | 'vibrant' 

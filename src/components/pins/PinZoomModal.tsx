@@ -2,8 +2,9 @@ import { X, Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, ArrowLeft } 
 import { Pin } from '@/types/MoodBoardZ';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { CommentSection } from './CommentSection';
 
 interface PinZoomModalProps {
   pin: Pin | null;
@@ -25,8 +26,6 @@ export const PinZoomModal = ({ pin, isOpen, onClose }: PinZoomModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent hideCloseButton className="max-w-5xl w-[95vw] max-h-[90vh] p-0 gap-0 overflow-hidden rounded-3xl">
-        <DialogTitle className="sr-only">Pin Details</DialogTitle>
-        <DialogDescription className="sr-only">View pin details and interactions</DialogDescription>
         <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
           {/* Image Section */}
           <div className="md:w-1/2 bg-secondary flex items-center justify-center relative">
@@ -122,12 +121,9 @@ export const PinZoomModal = ({ pin, isOpen, onClose }: PinZoomModalProps) => {
                   </div>
                 )}
 
-                {/* Comments Section Placeholder */}
+                {/* Comments Section */}
                 <div className="pt-6 border-t">
-                  <h3 className="font-semibold mb-4">Comments</h3>
-                  <p className="text-muted-foreground text-sm">
-                    No comments yet. Be the first to comment!
-                  </p>
+                  <CommentSection pinId={pin._id} />
                 </div>
               </div>
             </ScrollArea>
